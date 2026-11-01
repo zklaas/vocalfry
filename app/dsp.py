@@ -127,7 +127,16 @@ def effective(settings: dict, a: Analysis) -> dict:
                 s["pitch_hz"] = a.mean_f0
             if g == "tract":
                 s["tract"] = s["src_tract"] = settings.get("src_tract", NOMINAL_TRACT)
+    if s.get("keep_key", 0) >= 0.5:
+        s.update(pitch_hz=key_pitch(s["pitch_hz"], a.mean_f0),
+                 pitch_range=100.0, declination=0.0, fry=0.0)
     return s
+
+
+def key_pitch(target_hz: float, src_hz: float) -> float:
+    """Keep key: the mean pitch a whole number of octaves from the recording's,
+    as close to target_hz as that allows."""
+    return src_hz * 2.0 ** round(math.log2(max(20.0, target_hz) / src_hz))
 
 
 # ---------------------------------------------------------------- render

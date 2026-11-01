@@ -80,8 +80,9 @@ def set_flag(path: str, key: str, on: bool) -> None:
 
 def from_settings(name: str, path: str, settings: dict, menu: bool = False) -> Preset:
     """A preset of the voice in `settings`: every voice control, minus the
-    source tract length (a fact about the recording) and clean-up."""
-    keys = [k for g in params.VOICE_GROUPS for k in params.GROUP_KEYS[g] if k != "src_tract"]
+    source tract length (a fact about the recording), Keep key and clean-up."""
+    keys = [k for g in params.VOICE_GROUPS for k in params.GROUP_KEYS[g]
+            if k not in ("src_tract", "keep_key")]
     values = {k: settings[k] for k in keys if k in settings}
     values.update({"on_" + g: bool(settings.get("on_" + g, True)) for g in params.VOICE_GROUPS})
     return Preset(name, os.path.abspath(path), menu, values)

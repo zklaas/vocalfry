@@ -49,6 +49,10 @@ PARAMS: list[Param] = [
     Param("pitch_hz", "pitch", "Mean pitch", 50, 500, 0, "Hz", 1,
           "Target average speaking pitch (F0). Neutral = the recording's own mean.",
           log=True),
+    Param("keep_key", "pitch", "Keep key (whole octaves)", 0, 1, 0, "", 0,
+          "For singing: round the pitch change to whole octaves, so the voice stays "
+          "in the song's key, and hold intonation range, declination and fry at "
+          "neutral (they bend notes off the key)."),
     Param("pitch_range", "pitch", "Intonation range", 0, 300, 100, "%", 0,
           "Scales the rises and falls around the mean. 0 = monotone, 100 = as recorded."),
     Param("declination", "pitch", "Declination", -6, 6, 0, "st/s", 1,
@@ -95,16 +99,16 @@ PARAMS: list[Param] = [
 ]
 
 BY_KEY = {p.key: p for p in PARAMS}
-TOGGLES = [p.key for p in PARAMS if p.key == "whisper"]
+TOGGLES = [p.key for p in PARAMS if p.key in ("whisper", "keep_key")]
 GROUP_KEYS = {g: [p.key for p in PARAMS if p.group == g] for g, _ in GROUPS}
 VOICE_GROUPS = [g for g, _ in GROUPS if g != "clean"]
 
 
 def keep_cleanup(new: dict, old: dict) -> dict:
     """Presets and random speakers describe a voice; clean-up describes the
-    recording, so carry it over unchanged."""
+    recording, and Keep key how it is used, so carry those over unchanged."""
     out = dict(new)
-    for k in GROUP_KEYS["clean"] + ["on_clean"]:
+    for k in GROUP_KEYS["clean"] + ["on_clean", "keep_key"]:
         if k in old:
             out[k] = old[k]
     return out

@@ -117,6 +117,27 @@ class Render(unittest.TestCase):
         orig = float(np.exp(np.log(self.a.f0[self.a.f0 > 0]).mean()))
         self.assertAlmostEqual(self.mean_f0(dsp.render(self.a, s)), orig, delta=2)
 
+    def test_keep_key_whole_octaves(self):
+        src = self.a.mean_f0
+        self.assertAlmostEqual(dsp.key_pitch(src * 0.64, src), src / 2)      # -7.7 st -> -1 octave
+        self.assertAlmostEqual(dsp.key_pitch(src * 1.27, src), src)          # +4.1 st -> no change
+        self.assertAlmostEqual(dsp.key_pitch(src * 2.5, src), src * 2)
+        s = dict(presets.apply(presets.find("Child").values, self.n), keep_key=1, declination=-2, fry=30,
+                 rate=100, pause=100)                                    # timing as Boxapella holds it
+        e = dsp.effective(s, self.a)
+        self.assertEqual((e["pitch_range"], e["declination"], e["fry"]), (100.0, 0.0, 0.0))
+        # every voiced frame moves by exactly the same whole number of octaves
+        r = dsp.render(self.a, s)
+        both = (r.f0 > 0) & (self.a.f0 > 0)
+        shift = np.log2(r.f0[both] / self.a.f0[both])
+        self.assertLess(np.abs(shift - np.round(shift)).max(), 1e-6)
+
+    def test_keep_key_survives_presets_but_isnt_saved(self):
+        out = params.keep_cleanup(presets.apply(presets.find("Child").values, self.n),
+                                  dict(self.n, keep_key=1))
+        self.assertEqual(out["keep_key"], 1)
+        self.assertNotIn("keep_key", presets.from_settings("x", "x.json", out).values)
+
     def test_rate_and_whisper(self):
         r = dsp.render(self.a, dict(self.n, rate=50))
         self.assertAlmostEqual(len(r.y) / self.a.fs, self.a.duration * 2, delta=0.05)

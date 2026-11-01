@@ -8,8 +8,9 @@
                                       export N random plausible speakers
   vocalfry join OUT.wav IN1.wav IN2.wav ... [--gap MS] [--crossfade MS]
                                       append clips end to end into one file
-  vocalfry --boxapella OUT.wav [--settings S.json] TAKE.wav
+  vocalfry --boxapella OUT.wav [--settings S.json] [--keep-key] TAKE.wav
                                       editor for a Boxapella take: "Send to Boxapella" writes OUT.wav
+                                      (--keep-key: start with Keep key on)
   vocalfry params                     list every control with its range
   vocalfry presets                    list the preset files ([menu] = shown in the Preset menu)
 """
@@ -140,8 +141,11 @@ def main(argv=None) -> int:
             else:
                 settings = argv[i + 1]
             del argv[i:i + 2]
+    keep_key = "--keep-key" in argv                 # Boxapella: singing stays in key
+    if keep_key:
+        argv.remove("--keep-key")
     from app.gui import run
-    return run(argv[0] if argv else None, out, settings)
+    return run(argv[0] if argv else None, out, settings, keep_key)
 
 
 if __name__ == "__main__":

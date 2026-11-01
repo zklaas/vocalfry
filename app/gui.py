@@ -1103,13 +1103,15 @@ class ScriptWindow(QWidget):
 
 # ---------------------------------------------------------------- main window
 class MainWindow(QMainWindow):
-    def __init__(self, path: str | None = None, boxapella_out: str = "", settings_file: str = ""):
+    def __init__(self, path: str | None = None, boxapella_out: str = "", settings_file: str = "",
+                 keep_key: bool = False):
         super().__init__()
         # Opened by Boxapella on one take: "Send to Boxapella" writes the voice
         # to boxapella_out; settings_file (a preset or saved settings) is applied
-        # once the recording has been analysed.
+        # once the recording has been analysed, and keep_key turns Keep key on.
         self.boxapella_out = boxapella_out
         self._initial_settings = settings_file
+        self._initial_keep_key = keep_key
         self.setWindowTitle("VocalFry")
         if os.path.exists(ICON):
             self.setWindowIcon(QIcon(ICON))
@@ -1457,6 +1459,9 @@ class MainWindow(QMainWindow):
         if self._initial_settings:
             self._apply_settings_file(self._initial_settings)
             self._initial_settings = ""
+        if self._initial_keep_key:
+            self.settings["keep_key"] = 1.0
+            self._initial_keep_key = False
         self.contour.set_tracks(a.f0, None)
         self._sync_controls()
         if self.boxapella_out:
@@ -1738,10 +1743,11 @@ def export_batch(a, neutral, n, seed, folder, which=None, step=None, cancel=None
     return len(index)
 
 
-def run(path: str | None = None, boxapella_out: str = "", settings_file: str = "") -> int:
+def run(path: str | None = None, boxapella_out: str = "", settings_file: str = "",
+        keep_key: bool = False) -> int:
     app = QApplication.instance() or QApplication([])
     app.setApplicationName("VocalFry")
     app.setDesktopFileName("vocalfry")
-    w = MainWindow(path, boxapella_out, settings_file)
+    w = MainWindow(path, boxapella_out, settings_file, keep_key)
     w.show()
     return app.exec()

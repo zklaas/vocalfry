@@ -5,9 +5,16 @@ length (formants), voice quality and timing, each on a slider + numeric field.
 
 Runs on Linux and Windows; see [WINDOWS.md](WINDOWS.md) for installing on Windows.
 [Boxapella](https://github.com/zklaas/boxapella) uses VocalFry to reshape each
-inset's voice: `vocalfry --boxapella OUT.wav [--settings S.json] TAKE.wav` opens
-the editor with a **⮐ Send to Boxapella** button (Ctrl+Enter) that writes the
+inset's voice: `vocalfry --boxapella OUT.wav [--settings S.json] [--keep-key] TAKE.wav`
+opens the editor with a **⮐ Send to Boxapella** button (Ctrl+Enter) that writes the
 whole take, speaking rate and pauses kept, to OUT.wav.
+
+**Keep key (whole octaves)**, in the Pitch group, is for singing: the pitch change
+is rounded to the nearest whole octave, so the voice stays in the song's key, and
+intonation range, declination and vocal fry are held at neutral, since they bend
+notes off the key. The voice's character still comes from the tract and quality
+controls. It carries over when you pick a preset and isn't saved into presets.
+Boxapella turns it on (`--keep-key`, or `--set keep_key=1` for `render`).
 
     vocalfry [FILE.wav]          editor
     vocalfry render IN OUT [--preset NAME] [--settings S.json] [--set key=value ...]
@@ -95,7 +102,7 @@ and WORLD resynthesises:
 | Group | Controls | Edits |
 |---|---|---|
 | Clean-up | rumble cut-off, thud & scrape removal, protect near speech | output high-pass; gain on non-speech frames |
-| Pitch | mean pitch, intonation range, declination, jitter, vibrato rate/depth, vocal fry | pitch track |
+| Pitch | mean pitch, keep key, intonation range, declination, jitter, vibrato rate/depth, vocal fry | pitch track |
 | Vocal tract | source / target tract length, F1–F3 offsets, formant sharpness | envelope frequency warp |
 | Voice quality | breathiness, spectral tilt, shimmer, whisper | aperiodicity / envelope |
 | Timing | speaking rate, pause length | frame resampling |
