@@ -18,7 +18,8 @@ function Get-PyVersion([string]$Exe) {
     if (-not $Exe -or -not (Test-Path -LiteralPath $Exe)) { return $null }
     if ($Exe -match '\\WindowsApps\\') { return $null }       # Microsoft Store stub
     try {
-        $v = & $Exe -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>$null
+        # no inner double quotes: Windows PowerShell 5.1 strips them from native args
+        $v = & $Exe -c 'import sys; print(*sys.version_info[:2], sep=chr(46))' 2>$null
         if ($LASTEXITCODE -eq 0) { return "$v".Trim() }
     } catch { }
     return $null
