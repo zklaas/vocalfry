@@ -1,0 +1,10 @@
+{
+  "vocalfry": 1,
+  "preset": "Adult man",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 115,
+    "tract": 17.5,
+    "tilt": -1
+  }
+}

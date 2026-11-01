@@ -1,0 +1,12 @@
+{
+  "vocalfry": 1,
+  "preset": "Young child",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 360,
+    "tract": 10.2,
+    "pitch_range": 150,
+    "rate": 85,
+    "pause": 130
+  }
+}

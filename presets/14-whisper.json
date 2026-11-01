@@ -1,0 +1,8 @@
+{
+  "vocalfry": 1,
+  "preset": "Whisper",
+  "menu": false,
+  "settings": {
+    "whisper": 1
+  }
+}

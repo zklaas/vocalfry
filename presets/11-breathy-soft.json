@@ -1,0 +1,10 @@
+{
+  "vocalfry": 1,
+  "preset": "Breathy & soft",
+  "menu": false,
+  "settings": {
+    "breath": 55,
+    "tilt": -6,
+    "sharpness": 85
+  }
+}

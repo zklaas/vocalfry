@@ -1,0 +1,10 @@
+{
+  "vocalfry": 1,
+  "preset": "Teen",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 240,
+    "tract": 13.5,
+    "pitch_range": 110
+  }
+}

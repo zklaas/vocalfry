@@ -1,0 +1,17 @@
+{
+  "vocalfry": 1,
+  "preset": "Elderly woman",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 180,
+    "tract": 14.8,
+    "jitter": 2.5,
+    "shimmer": 15,
+    "breath": 30,
+    "vib_depth": 35,
+    "vib_rate": 5.5,
+    "rate": 85,
+    "pause": 140,
+    "tilt": -2
+  }
+}

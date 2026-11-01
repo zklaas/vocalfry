@@ -1,0 +1,9 @@
+{
+  "vocalfry": 1,
+  "preset": "Monotone",
+  "menu": false,
+  "settings": {
+    "pitch_range": 0,
+    "declination": 0
+  }
+}

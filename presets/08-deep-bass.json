@@ -1,0 +1,11 @@
+{
+  "vocalfry": 1,
+  "preset": "Deep bass",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 80,
+    "tract": 18.8,
+    "tilt": -3,
+    "pitch_range": 80
+  }
+}

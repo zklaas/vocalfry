@@ -1,0 +1,17 @@
+{
+  "vocalfry": 1,
+  "preset": "Elderly man",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 135,
+    "tract": 17.5,
+    "jitter": 2.5,
+    "shimmer": 15,
+    "breath": 25,
+    "vib_depth": 30,
+    "vib_rate": 5,
+    "rate": 85,
+    "pause": 140,
+    "tilt": -2
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "vocalfry": 1,
+  "preset": "Hammerina",
+  "menu": true,
+  "settings": {
+    "pitch_hz": 228.1,
+    "pitch_range": 100,
+    "declination": 0,
+    "jitter": 0,
+    "vib_rate": 5.5,
+    "vib_depth": 0,
+    "fry": 0,
+    "fry_hz": 55,
+    "tract": 14.7,
+    "f1_shift": 0,
+    "f2_shift": 0,
+    "f3_shift": 0,
+    "sharpness": 100,
+    "breath": 0,
+    "tilt": 0,
+    "shimmer": 0,
+    "whisper": 0,
+    "rate": 100,
+    "pause": 100,
+    "on_pitch": true,
+    "on_tract": true,
+    "on_quality": true,
+    "on_timing": true
+  },
+  "map": false
+}

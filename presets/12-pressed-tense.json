@@ -1,0 +1,11 @@
+{
+  "vocalfry": 1,
+  "preset": "Pressed & tense",
+  "menu": false,
+  "settings": {
+    "tilt": 6,
+    "sharpness": 140,
+    "breath": -50,
+    "pitch_range": 80
+  }
+}

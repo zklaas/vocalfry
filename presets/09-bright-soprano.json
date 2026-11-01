@@ -1,0 +1,11 @@
+{
+  "vocalfry": 1,
+  "preset": "Bright soprano",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 260,
+    "tract": 14.0,
+    "tilt": 3,
+    "sharpness": 130
+  }
+}

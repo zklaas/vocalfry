@@ -1,0 +1,10 @@
+# Example script quoted from The Cocoanuts (1929): public domain in the US but
+# not in Canada until 2056. The user asked that it never be redistributed.
+scripts/why-a-duck.txt
+
+.venv/
+__pycache__/
+voicework/
+# stray recordings
+app/*.wav
+*.pyc

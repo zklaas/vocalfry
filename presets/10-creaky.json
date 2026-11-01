@@ -1,0 +1,11 @@
+{
+  "vocalfry": 1,
+  "preset": "Creaky",
+  "menu": false,
+  "settings": {
+    "fry": 45,
+    "fry_hz": 50,
+    "tilt": 2,
+    "pitch_range": 70
+  }
+}

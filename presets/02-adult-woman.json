@@ -1,0 +1,11 @@
+{
+  "vocalfry": 1,
+  "preset": "Adult woman",
+  "menu": false,
+  "settings": {
+    "pitch_hz": 205,
+    "tract": 14.6,
+    "breath": 15,
+    "pitch_range": 120
+  }
+}
