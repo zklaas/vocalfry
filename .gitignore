@@ -8,3 +8,19 @@ voicework/
 # stray recordings
 app/*.wav
 *.pyc
+.classifier-review/
+
+# Kept out of releases by Classifier (provenance)
+samples/Front_Center.wav
+samples/dummy-message.wav
+samples/noisy_test.wav
+voicework/1 - mainland.wav
+voicework/2 - whyaduck.wav
+voicework/3 - imallright.wav
+voicework/4 - allrightwhyaduck.wav
+voicework/5 - askmeanother.wav
+voicework/6 - whyanochicken.wav
+voicework/7 - imastrangerhere.wav
+voicework/8 - thatswhy.wav
+voicework/Cocoanuts-1.wav
+voicework/The Cocoanuts.mp4
