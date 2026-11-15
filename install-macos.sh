@@ -3,7 +3,7 @@
 #
 #   bash install-macos.sh
 #
-# Creates .venv in this folder with PyQt6 numpy pyworld imageio-ffmpeg sounddevice, writes a `vocalfry` command into
+# Creates .venv in this folder with PyQt6 numpy pyworld imageio-ffmpeg sounddevice, writes the `vocalfry` command into
 # ~/.local/bin, and puts a VocalFry app (with its icon) in ~/Applications, so it
 # opens from Launchpad, Spotlight or the Dock.
 set -euo pipefail
