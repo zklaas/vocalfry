@@ -33,7 +33,8 @@ def ffmpeg_exe() -> str:
         if exe:
             return exe
     raise VideoError("No ffmpeg found. Install it with:\n"
-                     "  .venv/bin/pip install imageio-ffmpeg   (or: sudo apt install ffmpeg)")
+                     "  .venv/bin/pip install imageio-ffmpeg   (or: sudo apt install ffmpeg;"
+                     " on macOS: brew install ffmpeg)")
 
 
 def title_card(title: str, description: str, style: str = "Dark", size=SIZE) -> QImage:

@@ -3,7 +3,7 @@
 Reads PCM (8/16/24/32-bit) and IEEE-float WAV, including WAVE_FORMAT_EXTENSIBLE,
 and tolerates the unfinished length fields a killed recorder leaves behind.
 Playback and recording shell out to pw-play/pw-record (PipeWire), falling
-back to paplay/parec or aplay/arecord; on Windows they go through PortAudio
+back to paplay/parec or aplay/arecord; on Windows and macOS they go through PortAudio
 (the sounddevice package).
 """
 from __future__ import annotations
@@ -13,12 +13,15 @@ import shutil
 import signal
 import struct
 import subprocess
+import sys
 import wave
 
 import numpy as np
 
 
 WINDOWS = os.name == "nt"
+MACOS = sys.platform == "darwin"
+PORTAUDIO = WINDOWS or MACOS      # no PipeWire / ALSA tools: use sounddevice
 
 
 class AudioError(Exception):
@@ -30,7 +33,7 @@ def _sd():
         import sounddevice
         return sounddevice
     except ImportError as e:
-        raise AudioError("The sounddevice package is needed (run install.ps1).") from e
+        raise AudioError("The sounddevice package is needed (run install.ps1 on Windows, install-macos.sh on macOS).") from e
 
 
 def read_wav(path: str) -> tuple[np.ndarray, int]:
@@ -223,7 +226,7 @@ class _WinRecorder:
 
 class Player:
     def __new__(cls, *a, **k):
-        return _WinPlayer() if WINDOWS else super().__new__(cls)
+        return _WinPlayer() if PORTAUDIO else super().__new__(cls)
 
     def __init__(self):
         self.proc: subprocess.Popen | None = None
@@ -251,7 +254,7 @@ class Player:
 
 class Recorder:
     def __new__(cls, *a, **k):
-        return _WinRecorder() if WINDOWS else super().__new__(cls)
+        return _WinRecorder() if PORTAUDIO else super().__new__(cls)
 
     def __init__(self):
         self.proc: subprocess.Popen | None = None

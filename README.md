@@ -3,7 +3,7 @@
 Reshape a voice recording across the range of human voices: pitch, vocal-tract
 length (formants), voice quality and timing, each on a slider + numeric field.
 
-Runs on Linux and Windows; see [WINDOWS.md](WINDOWS.md) for installing on Windows.
+Runs on Linux, Windows and macOS; see [WINDOWS.md](WINDOWS.md) and [MACOS.md](MACOS.md) for installing on Windows and on a Mac.
 [Boxapella](https://github.com/zklaas/boxapella) uses VocalFry to reshape each
 inset's voice: `vocalfry --boxapella OUT.wav [--settings S.json] [--keep-key] TAKE.wav`
 opens the editor with a **⮐ Send to Boxapella** button (Ctrl+Enter) that writes the
@@ -132,3 +132,10 @@ These are installed by pip, not bundled. If VocalFry is ever redistributed with
 them included, their copyright notices must go along.
 `samples/` holds two system sound files (ALSA, speech-dispatcher) used by the tests, plus
 `noisy_test.wav` (Front_Center + room tone, a 70 Hz thud and a noise-burst scrape).
+
+## Windows and macOS
+
+The same code runs on Windows and macOS. To install it there:
+
+* **Windows:** see [WINDOWS.md](WINDOWS.md) (`install.ps1`).
+* **macOS:** see [MACOS.md](MACOS.md) (`install-macos.sh`).

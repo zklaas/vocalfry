@@ -16,14 +16,19 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from dataclasses import dataclass, field
 
 from . import params
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PRESET_DIR = os.path.join(HERE, "presets")
-CONFIG_DIR = (os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "VocalFry") if os.name == "nt"
-              else os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "vocalfry"))
+if os.name == "nt":
+    CONFIG_DIR = os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "VocalFry")
+elif sys.platform == "darwin":
+    CONFIG_DIR = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "VocalFry")
+else:
+    CONFIG_DIR = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "vocalfry")
 KNOWN = os.path.join(CONFIG_DIR, "known_presets.json")
 
 
