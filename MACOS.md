@@ -42,4 +42,4 @@ VocalFry needs **Python 3.13 or 3.12** (`brew install python@3.13`). pyworld (th
 
 To remove it: delete the folder, `~/Applications/VocalFry.app` and `~/.local/bin/vocalfry`.
 
-If something doesn't work, please write to zklaas@yahoo.ca.
+If something doesn't work, please write to zklaastest-testing@yahoo.com.

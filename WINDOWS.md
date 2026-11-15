@@ -41,4 +41,4 @@ Not in the repository: `voicework/` (your recordings) and
 `scripts/why-a-duck.txt` (the *Cocoanuts* excerpt, which may not be
 redistributed). Without that file, the Script panel's *Example* button does nothing.
 
-If something doesn't work, please write to zklaas@yahoo.ca.
+If something doesn't work, please write to zklaastest-testing@yahoo.com.

@@ -41,4 +41,4 @@ No git? (the first `git` command offers to install Apple's command-line tools: a
 
 More about macOS: [MACOS.md](MACOS.md).
 
-If something doesn't work, please write to zklaas@yahoo.ca.
+If something doesn't work, please write to zklaastest-testing@yahoo.com.
