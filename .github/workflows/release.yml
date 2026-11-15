@@ -1,0 +1,152 @@
+# Build downloadable VocalFry packages (Windows, macOS, Linux) and attach them to a GitHub
+# Release.
+#
+#   Start it:  Actions > "Release packages" > Run workflow (give a version, e.g. 1.0.1)
+#              or push a tag such as v1.0.1
+#
+# Each package bundles Python and everything VocalFry uses (built by PyInstaller), so
+# people need nothing else. Asset names stay the same from release to release, so
+#   https://github.com/zklaas/vocalfry/releases/latest/download/<name>
+# always gives the newest one.
+name: Release packages
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g. 1.0.1)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  VERSION: ${{ github.event.inputs.version || github.ref_name }}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            icon: icons/vocalfry.ico
+            sep: ";"
+          - os: macos-latest
+            icon: icons/vocalfry.icns
+            sep: ":"
+          - os: ubuntu-22.04            # older Linux base: the AppImage runs on more systems
+            icon: icons/vocalfry.png
+            sep: ":"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the build tools
+        run: python -m pip install pyinstaller PyQt6 numpy pyworld imageio-ffmpeg sounddevice
+
+      - name: Linux libraries Qt needs (for the start-up check)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libxkbcommon-x11-0 libxcb-cursor0 libfuse2 libportaudio2 libnss3 libxcomposite1 libxdamage1 libxrandr2 libxtst6 libasound2
+
+      - name: Build with PyInstaller
+        shell: bash
+        run: >
+          pyinstaller --noconfirm --clean --windowed --name VocalFry
+          --icon "${{ matrix.icon }}"
+          --add-data "icons${{ matrix.sep }}icons"
+          --add-data "presets${{ matrix.sep }}presets"
+          --collect-all imageio_ffmpeg
+          --collect-all sounddevice
+          --collect-all pyworld
+          vocalfry.py
+
+      - name: macOS permission notes (camera / microphone)
+        if: runner.os == 'macOS'
+        run: |
+          plutil -insert NSMicrophoneUsageDescription -string "VocalFry records your voice." dist/VocalFry.app/Contents/Info.plist
+          codesign --force --deep -s - dist/VocalFry.app
+
+      - name: Check that it starts
+        shell: bash
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          if [ "$RUNNER_OS" = macOS ]; then EXE=dist/VocalFry.app/Contents/MacOS/VocalFry
+          elif [ "$RUNNER_OS" = Windows ]; then EXE=dist/VocalFry/VocalFry.exe
+          else EXE=dist/VocalFry/VocalFry; fi
+          # the window: still running after 25 s = it started (Python's timeout works everywhere)
+          python - "$EXE" <<'PY'
+          import subprocess, sys
+          try:
+              subprocess.run([sys.argv[1]], timeout=25)
+          except subprocess.TimeoutExpired:
+              print("window started"); sys.exit(0)
+          sys.exit("the window closed by itself")
+          PY
+
+      - name: Package for Windows (installer)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Get-Command iscc -ErrorAction SilentlyContinue)) { choco install innosetup -y --no-progress }
+          $iscc = (Get-Command iscc -ErrorAction SilentlyContinue).Source
+          if (-not $iscc) { $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" }
+          & $iscc "/DAppVersion=$($env:VERSION.TrimStart('v'))" packaging\vocalfry.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+
+      - name: Package for macOS (disk image)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p release dmg
+          cp -R dist/VocalFry.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname "VocalFry" -srcfolder dmg -ov -format UDZO release/VocalFry-macOS.dmg
+
+      - name: Package for Linux (AppImage)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p release AppDir/usr/bin
+          cp -R dist/VocalFry/. AppDir/usr/bin/
+          cp icons/vocalfry.png AppDir/vocalfry.png
+          printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=VocalFry' \
+            'Comment=Reshape a voice recording' 'Exec=VocalFry' 'Icon=vocalfry' 'Categories=Utility;' > AppDir/vocalfry.desktop
+          printf '%s\n' '#!/bin/sh' 'HERE="$(dirname "$(readlink -f "$0")")"' \
+            'exec "$HERE/usr/bin/VocalFry" "$@"' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+          curl -fsSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          ARCH=x86_64 APPIMAGE_EXTRACT_AND_RUN=1 ./appimagetool AppDir release/VocalFry-Linux-x86_64.AppImage
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ runner.os }}
+          path: release/*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: packages
+          merge-multiple: true
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v${VERSION#v}"
+          ls -la packages
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" packages/* --clobber
+          else
+            gh release create "$TAG" packages/* --target "$GITHUB_SHA" \
+              --title "VocalFry ${VERSION#v}" --notes-file packaging/release-notes.md
+          fi

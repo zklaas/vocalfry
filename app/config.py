@@ -3,12 +3,16 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import re
 
 from . import presets
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WORK_DIR = os.path.join(HERE, "voicework")          # where saved voice work goes by default
+# where saved voice work goes by default: beside the program when run from its folder;
+# Documents/VocalFry for the downloaded (packaged) program, whose folder is read-only
+WORK_DIR = (os.path.join(os.path.expanduser("~"), "Documents", "VocalFry")
+            if getattr(sys, "frozen", False) else os.path.join(HERE, "voicework"))
 
 
 def _path() -> str:

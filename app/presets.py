@@ -31,6 +31,15 @@ else:
     CONFIG_DIR = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "vocalfry")
 KNOWN = os.path.join(CONFIG_DIR, "known_presets.json")
 
+if getattr(sys, "frozen", False):
+    # The downloaded (packaged) program's own folder is read-only, and VocalFry updates
+    # presets in place: use a copy in the settings folder, made on first run.
+    _BUILTIN = PRESET_DIR
+    PRESET_DIR = os.path.join(CONFIG_DIR, "presets")
+    if not os.path.isdir(PRESET_DIR) and os.path.isdir(_BUILTIN):
+        import shutil
+        shutil.copytree(_BUILTIN, PRESET_DIR)
+
 
 class PresetError(Exception):
     pass
